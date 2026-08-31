@@ -1,0 +1,38 @@
+[
+  {
+    "template_id": "testimonial_expert",
+    "name": "Testimoni Profesional (POV)",
+    "structure": ["Problem", "Discovery", "Solution/How-to", "Transformation", "CTA"],
+    "best_for": ["social proof", "before-after", "myth-busting"]
+  },
+  {
+    "template_id": "unboxing_reveal",
+    "name": "Unboxing & Reveal",
+    "structure": ["Hook Visual", "Unboxing", "Feature Highlight", "Reaction", "CTA"],
+    "best_for": ["pattern interrupt", "day-in-the-life"]
+  },
+  {
+    "template_id": "before_after_split",
+    "name": "Before-After Transformation",
+    "structure": ["Before State", "Turning Point", "Process", "After State", "CTA"],
+    "best_for": ["before-after", "problem-agitate-solve"]
+  },
+  {
+    "template_id": "myth_bust",
+    "name": "Myth Busting",
+    "structure": ["Common Belief", "Twist/Counter-fact", "Explanation", "Proof", "CTA"],
+    "best_for": ["myth-busting", "controversial opinion"]
+  },
+  {
+    "template_id": "pov_roleplay",
+    "name": "POV Roleplay",
+    "structure": ["Scene Setup", "Conflict/Trigger", "Character Reaction", "Resolution", "CTA"],
+    "best_for": ["pov roleplay", "pattern interrupt"]
+  },
+  {
+    "template_id": "activity_sequence",
+    "name": "Rutinitas Aktivitas (Tanpa Dialog)",
+    "structure": ["Activity Hook", "Activity 1", "Activity 2", "Activity 3", "Activity 4", "Product Moment", "CTA Visual"],
+    "best_for": ["day-in-the-life", "before-after"]
+  }
+]

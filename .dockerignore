@@ -1,0 +1,12 @@
+# .dockerignore
+node_modules
+dist
+.git
+.env
+backups
+server/data.db
+server/data.db-shm
+server/data.db-wal
+*.db.bak
+.omo
+.commandcode

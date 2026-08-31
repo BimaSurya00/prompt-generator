@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Generator</title>
+  <script>
+    // Theme init: baca localStorage sebelum render untuk hindari flash
+    try {
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light')
+      }
+    } catch {}
+  </script>
+</head>
+<body class="min-h-screen">
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

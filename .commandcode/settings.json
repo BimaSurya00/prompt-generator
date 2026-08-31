@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(sleep:*)",
+      "Shell(curl -s http://localhost:5173/)",
+      "Shell(curl -s -o /dev/null -w %{http_code} http://localhost:5173/src/style.css)",
+      "Shell(agent-browser:*)",
+      "Shell(kill_shell:*)",
+      "Shell(kill 17459 2>/dev/null; pkill -f \"vite\" 2>/dev/null; echo \"done\")",
+      "Shell(curl -s -o /dev/null -w %{http_code} http://localhost:5173/ 2 > /dev/null)",
+      "Shell(cd /home/Bima/Documents/prompt-generator && for c in \"font-display\" \"font-sans\" \"text-accent\" \"text-soft\" \"text-faint\" \"text-text\" \"bg-accent\" \"accent-\\[var\" \"text-variant-a\" \"text-variant-b\" \"text-danger\" \"text-success\" \"text-edge-hover\" \"border-edge\"; do n=$(grep -o \"\\.$c\" dist/assets/*.css 2>/dev/null | wc -l); echo \"$c: $n\"; done)",
+      "Shell(npm:*)",
+      "Shell(curl -s -o /dev/null -w %{http_code} http://localhost:5173/)",
+      "Shell(curl -s http://localhost:5173/src/App.vue)",
+      "Shell(pkill -f \"vite\" 2>/dev/null; agent-browser close 2>&1 | tail -1; curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/ 2>/dev/null || echo \"server mati\")",
+      "Shell(grep:*)",
+      "Shell(curl -s http://localhost:5173/src/style.css)",
+      "Shell(cd /home/Bima/Documents/prompt-generator && curl -s \"http://localhost:5173/src/style.css\" | grep -n \"color-text\\|--text:\" | head -10; echo \"=== tailwind css ===\"; curl -s \"http://localhost:5173/node_modules/.vite/deps/tailwindcss.js\" -o /dev/null -w \"%{http_code}\\n\" 2>/dev/null; curl -s \"http://localhost:5173/src/style.css\" | grep -n \"layer theme\" | head -5)",
+      "Shell(pkill -f vite 2>/dev/null; agent-browser close 2>&1 | tail -1; curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/ 2>/dev/null || echo \"server mati\")",
+      "Shell(curl -s -o /dev/null -w fe:%{http_code}  http://localhost:5173/)",
+      "Shell(curl -s -o /dev/null -w api:%{http_code}\\n http://localhost:3001/api/usage)",
+      "Shell(agent-browser close 2>&1 | tail -1; pkill -f \"vite\" 2>/dev/null; curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/ 2>/dev/null || echo \"vite mati\"; curl -s -o /dev/null -w \"backend lama: %{http_code}\\n\" http://localhost:3001/api/usage 2>/dev/null)",
+      "Shell(curl -s -o /dev/null -w backend: %{http_code}\\n http://localhost:3001/api/usage 2 > /dev/null)",
+      "Shell(cd /home/Bima/Documents/prompt-generator && grep -o \"^[A-Z_]*=\" .env 2>/dev/null; echo \"---\"; grep -o \"^[A-Z_]*=\" .env.example 2>/dev/null)",
+      "Shell(awk:*)",
+      "Shell(curl -s -X POST http://localhost:3001/api/generate-ideas -H Content-Type: application/json -d {\"topic\":\"kopi kekinian untuk anak muda\"} --max-time 240)",
+      "Shell(curl -s -X POST http://localhost:3001/api/generate-prompts -H \"Content-Type: application/json\" -d '{\"ideas\":[\"0fd260b7-ae6d-4cb4-8550-38b87400e693\"]}' --max-time 240 > /tmp/commandcode-1000/-home-Bima-Documents-prompt-generator/35b4ec18-7b39-49cc-916c-8a57446a22b8/scratchpad/prompt-test.json; wc -c /tmp/commandcode-1000/-home-Bima-Documents-prompt-generator/35b4ec18-7b39-49cc-916c-8a57446a22b8/scratchpad/prompt-test.json)",
+      "Shell(python3 -c  import json d = json.load(open('prompt-test.json')) for r in d.get('results', []): print('IDEA:', r['idea'][:60]) for p in r['prompts']: c = p['content'] print(f\"VARIANT {p['variant']} — {len(c)} chars, {c.count('=== ADEGAN')} adegan blocks, has METADATA: {'METADATA' in c}, starts with ===A===: {c.startswith('===A===')}\") print(' first 200:', c[:200].replace(chr(10), ' | ')) print() )",
+      "Shell(python3 -c  import json, re d = json.load(open('prompt-test.json')) for r in d['results']: for p in r['prompts']: c = p['content'] adegan = re.findall(r'=== ADEGAN \\d+[^\\n]*===', c) durasi = re.findall(r'DURASI: [^\\n]+', c) print(f\"VAR {p['variant']}: adegan={adegan}\") print(f' durasi: {durasi[:6]}') for field in ['SUBJEK', 'APA YANG TERJADI', 'DIALOG', 'SETTING', 'PERAN']: print(f' {field}: {c.count(field)}x') print() )",
+      "Shell(node --check server/services/deepseek.js)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

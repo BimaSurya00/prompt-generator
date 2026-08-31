@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   Tema: warm ink/paper + electric lime (dark default, light toggle)
+   ============================================================ */
+:root {
+  --bg: #0e0d0b;
+  --surface: #161410;
+  --surface-hover: #1e1b16;
+  --surface-strong: #262219;
+  --border: rgba(245, 241, 234, 0.1);
+  --border-hover: rgba(245, 241, 234, 0.22);
+  --text: #f2ede4;
+  --text-soft: #a89f94;
+  --text-faint: #6f675d;
+  --accent: #d4ff3f;
+  --accent-strong: #c0f02e;
+  --accent-contrast: #14120d;
+  --variant-a: #2dd4bf;
+  --variant-b: #e879f9;
+  --danger: #fb7185;
+  --success: #4ade80;
+  color-scheme: dark;
+}
+
+html.light {
+  --bg: #faf7f1;
+  --surface: #ffffff;
+  --surface-hover: #f4efe7;
+  --surface-strong: #ece5d9;
+  --border: rgba(28, 25, 23, 0.12);
+  --border-hover: rgba(28, 25, 23, 0.28);
+  --text: #1c1917;
+  --text-soft: #57534e;
+  --text-faint: #a8a29e;
+  --accent: #65a30d;
+  --accent-strong: #4d7c0f;
+  --accent-contrast: #ffffff;
+  --variant-a: #0d9488;
+  --variant-b: #c026d3;
+  --danger: #e11d48;
+  --success: #16a34a;
+  color-scheme: light;
+}
+
+/* ============================================================
+   Token Tailwind v4
+   ============================================================ */
+@theme {
+  --font-display: "Space Grotesk", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-strong: var(--surface-strong);
+  --color-edge: var(--border);
+  --color-edge-hover: var(--border-hover);
+  --color-bg: var(--bg);
+  --color-soft: var(--text-soft);
+  --color-faint: var(--text-faint);
+  --color-text: var(--text);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-variant-a: var(--variant-a);
+  --color-variant-b: var(--variant-b);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(900px 500px at 85% -10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%),
+    radial-gradient(700px 450px at -10% 30%, color-mix(in srgb, var(--variant-b) 5%, transparent), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* ============================================================
+   Card & surface utilities
+   ============================================================ */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+}
+
+.glass-hover {
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-hover:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+}
+
+.glass-strong {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+}
+
+.glass-nav {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ============================================================
+   Spinner & loading bar
+   ============================================================ */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-sm {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.5s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.loading-bar {
+  width: 30%;
+  animation: loading-slide 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+@keyframes loading-slide {
+  0% { margin-left: -30%; }
+  50% { margin-left: 70%; }
+  100% { margin-left: -30%; }
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
