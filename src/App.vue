@@ -3,27 +3,39 @@
     <nav class="glass-nav sticky top-0 z-40">
       <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <router-link to="/" class="flex items-center gap-2.5 group">
-          <span class="w-9 h-9 rounded-xl bg-accent text-accent-contrast flex items-center justify-center font-display font-bold text-lg shadow-lg shadow-accent/20 group-hover:scale-105 transition-transform">P</span>
-          <span class="font-display text-lg font-bold tracking-tight">Prompt<span class="text-accent">Generator</span></span>
+          <span class="w-8 h-8 rounded overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+            <svg viewBox="0 0 32 32" class="w-full h-full block">
+              <defs>
+                <pattern id="clapper-stripes" width="8" height="32" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                  <rect width="4" height="32" fill="var(--bg)" />
+                  <rect x="4" width="4" height="32" fill="var(--accent)" />
+                </pattern>
+              </defs>
+              <rect width="32" height="32" fill="var(--accent)" />
+              <rect width="32" height="10" fill="url(#clapper-stripes)" />
+              <rect y="10" width="32" height="1.5" fill="var(--bg)" />
+            </svg>
+          </span>
+          <span class="font-display text-sm font-bold uppercase">Prompt<span class="text-accent">Generator</span></span>
         </router-link>
 
         <div class="flex items-center gap-4">
-          <div class="hidden md:flex items-center gap-1.5 font-mono text-[11px]">
-            <span class="text-faint">{{ usage.requests || 0 }} req</span>
+          <div class="hidden md:flex items-center gap-1.5 font-mono text-[11px] text-faint tabular-nums">
+            <span>{{ String(usage.requests || 0).padStart(3, '0') }} REQ</span>
             <span class="text-edge-hover">·</span>
-            <span class="text-faint">{{ formatTokens(usage.total_tokens) }} tok</span>
+            <span>{{ formatTokens(usage.total_tokens) }} TOK</span>
           </div>
 
-          <nav class="flex items-center gap-1 rounded-full glass p-1 text-sm">
+          <nav class="flex items-center gap-1 rounded glass p-1 text-sm">
             <router-link to="/"
-              class="px-3.5 py-1.5 rounded-full transition-colors"
+              class="px-3.5 py-1.5 rounded transition-colors"
               :class="$route.name === 'generate'
                 ? 'bg-accent text-accent-contrast font-semibold'
                 : 'text-soft hover:text-text'">
               Generate
             </router-link>
             <router-link to="/history"
-              class="px-3.5 py-1.5 rounded-full transition-colors"
+              class="px-3.5 py-1.5 rounded transition-colors"
               :class="$route.name === 'history'
                 ? 'bg-accent text-accent-contrast font-semibold'
                 : 'text-soft hover:text-text'">

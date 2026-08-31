@@ -1,46 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
-   Tema: warm ink/paper + electric lime (dark default, light toggle)
+   Tema: Cutting Room — Kodachrome Warm. Dasar espresso hangat
+   (bukan hitam pekat), aksen vermilion jenuh, dipadu hijau
+   kontinuitas untuk Varian B. Nuansa film stock vintage yang
+   kaya warna. Tidak ada gradient.
    ============================================================ */
 :root {
-  --bg: #0e0d0b;
-  --surface: #161410;
-  --surface-hover: #1e1b16;
-  --surface-strong: #262219;
-  --border: rgba(245, 241, 234, 0.1);
-  --border-hover: rgba(245, 241, 234, 0.22);
-  --text: #f2ede4;
-  --text-soft: #a89f94;
-  --text-faint: #6f675d;
-  --accent: #d4ff3f;
-  --accent-strong: #c0f02e;
-  --accent-contrast: #14120d;
-  --variant-a: #2dd4bf;
-  --variant-b: #e879f9;
-  --danger: #fb7185;
-  --success: #4ade80;
+  --bg: #181310;
+  --surface: #231b16;
+  --surface-hover: #2b2119;
+  --surface-strong: #332619;
+  --border: rgba(243, 236, 225, 0.1);
+  --border-hover: rgba(243, 236, 225, 0.22);
+  --text: #f3ece1;
+  --text-soft: #b3a48f;
+  --text-faint: #8a7a68;
+  --accent: #e2542a;
+  --accent-strong: #ef6b3f;
+  --accent-contrast: #ffffff;
+  --variant-a: #c9432a;
+  --variant-b: #4d8c5c;
+  --danger: #d94861;
+  --success: #5fa66c;
   color-scheme: dark;
 }
 
 html.light {
-  --bg: #faf7f1;
+  --bg: #f2ece2;
   --surface: #ffffff;
-  --surface-hover: #f4efe7;
-  --surface-strong: #ece5d9;
-  --border: rgba(28, 25, 23, 0.12);
-  --border-hover: rgba(28, 25, 23, 0.28);
-  --text: #1c1917;
-  --text-soft: #57534e;
-  --text-faint: #a8a29e;
-  --accent: #65a30d;
-  --accent-strong: #4d7c0f;
+  --surface-hover: #f6f0e6;
+  --surface-strong: #eee4d5;
+  --border: rgba(30, 22, 16, 0.12);
+  --border-hover: rgba(30, 22, 16, 0.26);
+  --text: #211a14;
+  --text-soft: #5c4f42;
+  --text-faint: #9c8d7a;
+  --accent: #b83f1c;
+  --accent-strong: #9c3416;
   --accent-contrast: #ffffff;
-  --variant-a: #0d9488;
-  --variant-b: #c026d3;
-  --danger: #e11d48;
-  --success: #16a34a;
+  --variant-a: #a63620;
+  --variant-b: #2f6b40;
+  --danger: #b8324a;
+  --success: #2f7a44;
   color-scheme: light;
 }
 
@@ -48,9 +51,9 @@ html.light {
    Token Tailwind v4
    ============================================================ */
 @theme {
-  --font-display: "Space Grotesk", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
@@ -79,10 +82,8 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background:
-    radial-gradient(900px 500px at 85% -10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%),
-    radial-gradient(700px 450px at -10% 30%, color-mix(in srgb, var(--variant-b) 5%, transparent), transparent 55%),
-    var(--bg);
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
@@ -96,12 +97,12 @@ body {
 }
 
 /* ============================================================
-   Card & surface utilities
+   Card & surface utilities (flat — no blur, hairline border)
    ============================================================ */
 .glass {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: 0.5rem;
 }
 
 .glass-hover {
@@ -116,14 +117,31 @@ body {
 .glass-strong {
   background: var(--surface-strong);
   border: 1px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: 0.5rem;
 }
 
 .glass-nav {
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
+}
+
+/* ============================================================
+   Slate tag — bordered mono label, replaces filled pill badges
+   ============================================================ */
+.slate-tag {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   Tape stripe — signature motif. Diagonal hazard-tape pattern,
+   the kind wrapped around film cases and slate edges. Built from
+   flat SVG polygons (no CSS gradient function anywhere).
+   ============================================================ */
+.tape-stripe {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23181310'/%3E%3Cpolygon points='0,16 8,0 12,0 4,16' fill='%23e2542a'/%3E%3Cpolygon points='12,16 16,4 16,10 15,16' fill='%23e2542a'/%3E%3C/svg%3E");
+  background-size: 16px 16px;
+  background-repeat: repeat-x;
 }
 
 /* ============================================================
@@ -155,10 +173,24 @@ body {
   flex-shrink: 0;
 }
 
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  display: inline-block;
+  flex-shrink: 0;
+  animation: rec-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes rec-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
 .loading-bar {
   width: 30%;
   animation: loading-slide 1.5s ease-in-out infinite;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
 
 @keyframes loading-slide {

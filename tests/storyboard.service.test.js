@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('./llm.service.js', () => ({
+vi.mock('../server/services/llm.service.js', () => ({
   generatePrompts: vi.fn(),
   splitScene: vi.fn(),
 }))
 
-import { splitScene } from './llm.service.js'
-import { parseVariant, enforceSceneDuration } from './storyboard.service.js'
+import { splitScene } from '../server/services/llm.service.js'
+import { parseVariant, enforceSceneDuration } from '../server/services/storyboard.service.js'
 
 describe('parseVariant', () => {
   it('extracts a TEMPLATE_USED prefix and returns the remaining content', () => {

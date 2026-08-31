@@ -1,66 +1,69 @@
 <template>
-  <div class="space-y-8">
-    <div class="flex justify-center">
-      <div class="flex rounded-xl overflow-hidden border border-edge text-sm font-semibold">
+  <div class="space-y-5">
+    <div class="flex items-center justify-between border-b border-edge">
+      <div class="flex items-center gap-1">
         <button
-          class="px-5 py-2.5 transition-colors"
-          :class="mode === 'ideation' ? 'bg-accent text-accent-contrast' : 'text-soft hover:text-accent'"
+          class="px-4 py-2 font-display font-bold text-base uppercase border-b-[3px] -mb-px transition-colors"
+          :class="mode === 'ideation' ? 'border-accent text-accent' : 'border-transparent text-faint hover:text-soft'"
           @click="mode = 'ideation'"
-        >Mode Ideation</button>
+        >Ideation</button>
         <button
-          class="px-5 py-2.5 transition-colors"
-          :class="mode === 'activity' ? 'bg-accent text-accent-contrast' : 'text-soft hover:text-accent'"
+          class="px-4 py-2 font-display font-bold text-base uppercase border-b-[3px] -mb-px transition-colors"
+          :class="mode === 'activity' ? 'border-accent text-accent' : 'border-transparent text-faint hover:text-soft'"
           @click="mode = 'activity'"
-        >Mode Aktivitas</button>
+        >Aktivitas</button>
       </div>
+      <p class="hidden sm:block text-xs text-faint pr-1">
+        {{ mode === 'ideation' ? '1 topik → 15 ide → storyboard A/B' : 'Karakter + daftar aktivitas → 1 naskah 30 detik' }}
+      </p>
     </div>
 
     <template v-if="mode === 'ideation'">
       <TopicInput :disabled="state.loading" @submit="onTopicSubmit" />
 
-      <div v-if="state.loading" class="glass p-8 text-center">
-        <div class="flex items-center justify-center gap-3">
-          <span class="spinner"></span>
-          <p class="text-sm font-semibold text-accent">Membuat 15 ide...</p>
-        </div>
-        <div class="h-1 bg-surface-strong rounded-full overflow-hidden mt-5 max-w-md mx-auto">
-          <div class="h-full loading-bar"></div>
+      <div v-if="state.loading" class="flex items-center gap-2.5 py-2">
+        <span class="rec-dot"></span>
+        <p class="font-mono text-xs tracking-widest text-accent uppercase">Membuat 15 ide...</p>
+        <div class="flex-1 h-px bg-surface-strong overflow-hidden">
+          <div class="h-full loading-bar tape-stripe"></div>
         </div>
       </div>
 
-      <p v-if="state.error" class="text-danger text-sm bg-danger/10 border border-danger/25 rounded-xl px-4 py-3">{{ state.error }}</p>
+      <p v-if="state.error" class="text-danger text-sm bg-danger/10 border border-danger/25 rounded px-4 py-3">{{ state.error }}</p>
 
-      <div v-if="state.ideas.length && !state.loading && !state.results.length" class="flex justify-end">
+      <div v-if="state.ideas.length" class="flex items-center justify-between gap-2 flex-wrap">
         <button
-          class="text-xs font-semibold text-soft hover:text-accent transition-colors px-3.5 py-1.5 rounded-lg glass glass-hover"
+          v-if="!state.loading && !state.results.length"
+          class="text-xs font-semibold text-soft hover:text-accent transition-colors px-3 py-1.5 rounded glass glass-hover"
           @click="resetAll"
         >Mulai Ulang</button>
-      </div>
+        <span v-else></span>
 
-      <div v-if="state.ideas.length" class="flex items-center justify-end gap-2">
-        <label for="maxClip" class="text-xs text-soft">Max durasi/clip (detik)</label>
-        <input
-          id="maxClip"
-          type="number"
-          v-model.number="maxClipDuration"
-          min="5"
-          max="60"
-          class="w-20 px-2.5 py-1.5 rounded-lg bg-surface border border-edge text-sm text-text focus:outline-none focus:border-accent"
-        />
-        <label for="ideationModel" class="text-xs text-soft">Target model</label>
-        <select
-          id="ideationModel"
-          v-model="model"
-          class="px-3 py-1.5 rounded-lg bg-surface border border-edge text-sm text-text focus:outline-none focus:border-accent"
-        >
-          <option value="seedance">Seedance</option>
-          <option value="kling">Kling</option>
-          <option value="veo">Veo</option>
-          <option value="wan">Wan</option>
-          <option value="minimax">MiniMax</option>
-          <option value="ltx">LTX</option>
-          <option value="generic">Generic</option>
-        </select>
+        <div class="flex items-center gap-2">
+          <label for="maxClip" class="text-xs text-soft">Max durasi/clip (detik)</label>
+          <input
+            id="maxClip"
+            type="number"
+            v-model.number="maxClipDuration"
+            min="5"
+            max="60"
+            class="w-20 px-2.5 py-1.5 rounded bg-surface border border-edge text-sm text-text focus:outline-none focus:border-accent"
+          />
+          <label for="ideationModel" class="text-xs text-soft">Target model</label>
+          <select
+            id="ideationModel"
+            v-model="model"
+            class="px-3 py-1.5 rounded bg-surface border border-edge text-sm text-text focus:outline-none focus:border-accent"
+          >
+            <option value="seedance">Seedance</option>
+            <option value="kling">Kling</option>
+            <option value="veo">Veo</option>
+            <option value="wan">Wan</option>
+            <option value="minimax">MiniMax</option>
+            <option value="ltx">LTX</option>
+            <option value="generic">Generic</option>
+          </select>
+        </div>
       </div>
 
       <IdeaSelector

@@ -1,14 +1,14 @@
 <template>
-  <div class="glass p-6 sm:p-8">
-    <div class="flex items-center gap-3 mb-6">
-      <span class="w-8 h-8 rounded-lg bg-accent/15 text-accent font-display font-bold text-sm flex items-center justify-center">3</span>
-      <h2 class="font-display text-lg font-bold">Prompt Storyboard A/B</h2>
+  <div>
+    <div class="flex items-center justify-between mb-3 pb-2 border-b border-edge">
+      <span class="font-display font-bold text-sm text-faint uppercase">Storyboard Output</span>
+      <span class="font-mono text-xs text-faint">{{ results.length }} naskah</span>
     </div>
 
-    <div class="space-y-6">
-      <div v-for="item in results" :key="item.ideaId" class="glass-strong overflow-hidden">
-        <div class="px-4 sm:px-6 py-3.5 text-sm font-semibold text-text border-b border-edge flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></span>
+    <div class="space-y-4">
+      <div v-for="(item, ri) in results" :key="item.ideaId" class="border border-edge rounded overflow-hidden">
+        <div class="px-4 sm:px-6 py-3 text-sm font-semibold text-text border-b border-edge bg-surface-strong flex items-center gap-2.5">
+          <span class="font-mono text-xs text-faint">{{ String(ri + 1).padStart(2, '0') }}</span>
           <span class="truncate">{{ item.idea }}</span>
         </div>
 
@@ -18,31 +18,31 @@
 <span class="inline-flex items-center gap-2.5">
                   <span
                     v-if="!single"
-                    class="px-2.5 py-1 rounded-full text-xs font-display font-bold tracking-wide"
+                    class="px-2.5 py-1 rounded text-xs font-display font-bold tracking-wide"
                     :class="variant.variant === 'A'
                       ? 'bg-variant-a/12 text-variant-a border border-variant-a/25'
                       : 'bg-variant-b/12 text-variant-b border border-variant-b/25'">
                     VARIAN {{ variant.variant }}
                   </span>
-                  <span v-if="!single" class="text-xs text-faint">{{ variant.variant === 'A' ? 'Form-Fill' : 'Prose/Narrative' }}</span>
+                  <span v-if="!single" class="text-xs text-faint">{{ variant.variant === 'A' ? 'Form-Fill · Tungsten' : 'Prose/Narrative · Daylight' }}</span>
                   <span
                     v-if="variant.template_used"
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-surface-strong text-soft border border-edge font-semibold"
+                    class="text-[10px] px-2 py-0.5 rounded bg-surface-strong text-soft border border-edge font-semibold slate-tag uppercase"
                   >{{ templateName(variant.template_used) }}</span>
                   <span
                     v-if="totalDuration(variant.content)"
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-surface-strong text-soft border border-edge font-mono"
+                    class="text-[10px] px-2 py-0.5 rounded bg-surface-strong text-soft border border-edge slate-tag"
                   >{{ totalDuration(variant.content) }}s total</span>
                 </span>
               <button
-                class="text-xs font-semibold text-soft hover:text-accent transition-colors px-3 py-1.5 rounded-lg glass glass-hover"
+                class="text-xs font-semibold text-soft hover:text-accent transition-colors px-3 py-1.5 rounded glass glass-hover"
                 @click="copyFull(variant.content)"
               >
                 {{ showCopied ? 'Tersalin!' : 'Copy all' }}
               </button>
             </div>
 
-            <div v-if="!parseSections(variant.content).length" class="bg-surface rounded-xl p-4">
+            <div v-if="!parseSections(variant.content).length" class="bg-surface rounded p-4">
               <p class="text-xs text-faint mb-2">Tidak bisa parse section — output mentah:</p>
               <p class="text-sm text-text leading-relaxed whitespace-pre-wrap">{{ variant.content }}</p>
             </div>
@@ -50,7 +50,7 @@
               <div
                 v-for="(section, si) in parseSections(variant.content)"
                 :key="si"
-                class="border border-edge rounded-xl overflow-hidden transition-colors hover:border-edge-hover"
+                class="border border-edge rounded overflow-hidden transition-colors hover:border-edge-hover"
               >
                 <button
                   class="w-full flex items-center justify-between px-4 py-2.5 text-left"
@@ -62,7 +62,7 @@
                     </span>
                     <span
                       v-if="sectionDuration(section)"
-                      class="text-[10px] px-1.5 py-0.5 rounded-full bg-surface-strong text-soft border border-edge font-mono flex-shrink-0"
+                      class="text-[10px] px-1.5 py-0.5 rounded bg-surface-strong text-soft border border-edge slate-tag flex-shrink-0"
                     >{{ sectionDuration(section) }}s</span>
                   </span>
                   <svg class="w-3.5 h-3.5 text-faint flex-shrink-0 transition-transform"
