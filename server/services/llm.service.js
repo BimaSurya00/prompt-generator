@@ -113,7 +113,6 @@ export async function generatePrompts(idea, language = 'id', angleCategory = nul
   const langName = language === 'en' ? 'English' : 'Indonesian'
   const modelGuide = MODEL_GUIDES[model] || MODEL_GUIDES.generic
   const shared = fill(PROMPT_IDEATION_SHARED, {
-    langName,
     modelGuide: modelGuide ? `TARGET MODEL GUIDE:\n${modelGuide}` : '',
   })
 
@@ -122,6 +121,7 @@ export async function generatePrompts(idea, language = 'id', angleCategory = nul
     templatesList: JSON.stringify(STORYBOARD_TEMPLATES, null, 2),
     angleCategory: angleCategory || 'unknown (infer from concept)',
     maxClipDuration,
+    langName,
   })
   const systemB = shared + '\n\n' + fill(PROMPT_IDEATION_B, {
     templateB: STORYBOARD_TEMPLATE_B,

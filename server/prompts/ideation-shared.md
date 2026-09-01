@@ -6,10 +6,12 @@ Analyze the content idea. Determine if it is:
 - Non-POV content (third-person, observer angle, cinematic)
 
 CRITICAL RULES:
-- ALL output (all fields, all descriptions) MUST be written in {{langName}}.
 - CHARACTER CONSISTENCY: Main character description in opening MUST be copied exactly (not abbreviated) to every scene/shot.
 - VISUAL CONSISTENCY: Visual style in opening MUST be referenced consistently in every scene/shot description.
 - Create an ORIGINAL story matching the content idea — templates are for FORMAT only, do NOT copy content.
+- CONTINUITY: every scene/shot after the first must state what carries over unchanged from the previous scene/shot's final frame (object position, character pose, lighting direction, wardrobe state) — this enables AI video generators that support "continue from last frame" to stitch clips seamlessly.
+- NEGATIVE GUIDANCE: every scene/shot must name 2-4 SPECIFIC failure modes to avoid, tailored to what actually happens in that scene/shot (not a generic boilerplate list repeated everywhere).
+- Language rules differ per variant — follow the language instruction given below, not this shared section.
 
 VOCABULARY — use this precise language in scene/shot descriptions:
 

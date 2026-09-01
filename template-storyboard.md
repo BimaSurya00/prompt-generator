@@ -35,6 +35,10 @@ SETTING: [tempat kejadian, singkat]
 
 VISUAL PROMPT: [deskripsi visual 1 kalimat, siap copas ke image generator — framing & angle kamera, pose/aksi utama, lighting, suasana, konsisten dengan GAYA VISUAL]
 
+CONTINUITY DARI ADEGAN SEBELUMNYA: [khusus adegan ke-2 dst — apa yang HARUS identik dari frame terakhir adegan sebelumnya: posisi objek, pose karakter, arah pencahayaan, kondisi wardrobe. Ini dipakai kalau AI video generator support "continue from last frame" biar sambungan antar clip mulus. Adegan 1: tulis "—"]
+
+AVOID: [2-4 hal SPESIFIK yang harus dihindari AI video generator untuk adegan ini — bukan boilerplate generik. Sesuaikan dengan isi adegan, misal: tangan pegang produk kecil → "extra fingers, warped product label"; gerakan cepat → "motion blur artifacts, morphing limbs"; wajah close-up → "distorted facial features, unnatural blinking"]
+
 PERAN ADEGAN INI DALAM CERITA: [problem / discovery / solution / transformasi / CTA — biar jelas fungsi tiap adegan di arc besar]
 ```
 
@@ -63,6 +67,8 @@ APA YANG TERJADI: Berdiri di depan cermin, mengangkat kaos melihat badannya yang
 DIALOG: "Udah makan banyak, tetep aja gini-gini aja."
 SETTING: Kamar tidur, pagi hari
 VISUAL PROMPT: Medium shot dari belakang, pria berkaca di cermin kamar, cahaya pagi hangat dari jendela, nuansa melankolis, warna hangat natural
+CONTINUITY DARI ADEGAN SEBELUMNYA: —
+AVOID: distorted mirror reflection, extra limbs, unnatural body proportions
 PERAN ADEGAN: Problem (menunjukkan insecurity)
 ```
 
@@ -74,6 +80,8 @@ APA YANG TERJADI: Duduk di kasur, scroll HP, berhenti melihat sesuatu, menganggu
 DIALOG: "Terus nemu ini di rekomendasian temen gym."
 SETTING: Kamar tidur, sama seperti adegan 1
 VISUAL PROMPT: Close-up tangan memegang HP, layar menyala menerangi wajah, sudut dari samping, cahaya hangat, fokus pada ekspresi penasaran
+CONTINUITY DARI ADEGAN SEBELUMNYA: Masih di kamar tidur yang sama, pencahayaan pagi hangat konsisten, posisi duduk di tepi kasur sama seperti akhir adegan 1
+AVOID: extra fingers, warped phone screen glare, text artifacts on screen
 PERAN ADEGAN: Discovery (memperkenalkan solusi)
 ```
 
@@ -85,6 +93,8 @@ APA YANG TERJADI: Mengambil kemasan GainMax, menuang ke shaker berisi susu, meng
 DIALOG: "Sehari dua kali, gampang banget diminum."
 SETTING: Dapur minimalis
 VISUAL PROMPT: Medium shot, pria menuang bubuk ke shaker di dapur terang, kemasan produk jelas terlihat, cahaya natural, warna hangat natural
+CONTINUITY DARI ADEGAN SEBELUMNYA: Baju kaos putih oversized sama, kini di dapur (transisi lokasi wajar dari kamar tidur), cahaya natural siang hari
+AVOID: warped product label, extra fingers around shaker, floating/duplicated packaging
 PERAN ADEGAN: Solution (memperkenalkan cara pakai produk)
 ```
 
@@ -96,6 +106,8 @@ APA YANG TERJADI: Berlatih ringan di rumah, tersenyum melihat progres, bercermin
 DIALOG: "Sebulan jalan, badan mulai keliatan bedanya."
 SETTING: Ruang tamu/sudut olahraga rumahan
 VISUAL PROMPT: Wide shot, pria push-up di ruang tamu, senyum percaya diri, cahaya sore hangat, warna hangat natural
+CONTINUITY DARI ADEGAN SEBELUMNYA: Kaos putih yang sama (kini terlihat lebih terisi di badan), transisi waktu implisit (beberapa minggu berlalu), cahaya sore hangat baru
+AVOID: morphing limbs during push-up motion, unnatural muscle proportions, motion blur artifacts
 PERAN ADEGAN: Transformasi (bukti hasil)
 ```
 
@@ -107,6 +119,8 @@ APA YANG TERJADI: Menghadap kamera langsung, memegang produk, tersenyum mengangk
 DIALOG: "Kalau kamu juga mau berubah, GainMax bisa jadi langkah awalnya."
 SETTING: Ruang tamu yang sama
 VISUAL PROMPT: Close-up depan, pria tersenyum memegang kemasan produk ke arah kamera, background ruang tamu blur, cahaya hangat, warna hangat natural
+CONTINUITY DARI ADEGAN SEBELUMNYA: Ruang tamu yang sama, kaos putih yang sama, kini menghadap kamera langsung (perubahan posisi dari wide shot ke close-up)
+AVOID: warped product packaging, distorted facial features, text overlay not requested
 PERAN ADEGAN: CTA (ajakan bertindak)
 ```
 
@@ -118,3 +132,5 @@ PERAN ADEGAN: CTA (ajakan bertindak)
 3. **VISUAL PROMPT** adalah deskripsi yang siap dicopas ke image generator (misal di platform AI video all-in-one) untuk membuat image reference/keyframe per adegan. Fokus ke framing, pose, lighting, suasana — bukan ke narasi cerita.
 4. **"Peran adegan"** membantu tim cek apakah alur ceritanya sudah lengkap (problem → discovery → solution → transformasi → CTA), bukan cuma kumpulan adegan acak.
 5. Detail teknis kamera/lighting sengaja tidak dimasukkan berlebihan — cukup di VISUAL PROMPT, biar diatur langsung di AI video generator atau ditambahkan manual saat kamu punya preferensi khusus.
+6. **CONTINUITY DARI ADEGAN SEBELUMNYA** dipakai buat AI video generator yang support "continue from last frame" (misal Kling, MiniMax, Seedance) — sebutkan konkret apa yang harus identik dari frame terakhir adegan sebelumnya biar sambungan antar clip gak keliatan "loncat".
+7. **AVOID** harus spesifik ke isi adegan itu, bukan daftar generik yang di-copy-paste di semua adegan — tulis kegagalan paling mungkin muncul dari AI video generator untuk gerakan/objek/framing spesifik di adegan tersebut.
