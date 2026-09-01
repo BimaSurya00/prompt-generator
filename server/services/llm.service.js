@@ -12,6 +12,7 @@ const STORYBOARD_TEMPLATE_A = readFileSync(path.join(TEMPLATE_DIR, '../../templa
   .replace(/\n{3,}/g, '\n\n')
   .trim()
 const STORYBOARD_TEMPLATE_B = readFileSync(path.join(TEMPLATE_DIR, '../../template-storyboard-b.md'), 'utf-8')
+  .split('<!-- LLM_TEMPLATE_END -->')[0]
   .replace(/```/g, '')
   .replace(/^#{1,6} .*$/gm, '')
   .replace(/^---+$/gm, '')

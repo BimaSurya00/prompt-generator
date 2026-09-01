@@ -96,6 +96,8 @@ NEGATIVE PROMPT
 8. **Visual prompt tidak perlu terpisah** — seluruh deskripsi visual sudah menyatu dalam prose
 9. **Negative prompt spesifik** — sertakan section NEGATIVE PROMPT berisi hal yang harus dihindari, relevan dengan konten storyboard ini (bukan daftar generik yang sama di semua output)
 
+<!-- LLM_TEMPLATE_END -->
+
 ---
 
 ## PERBEDAAN DENGAN VARIANT A
