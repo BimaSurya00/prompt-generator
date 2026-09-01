@@ -32,6 +32,16 @@ export function maxSceneDuration(content) {
   return Math.max(...ranges.map(m => Number(m[2]) - Number(m[1])))
 }
 
+// Structural sanity check: every requested activity must produce at least one
+// SCENE block with a duration range. Splitting increases scene count, so this
+// checks a lower bound, not an exact match. Length-based checks are a fragile
+// proxy for a malformed response — this validates the actual required shape.
+export function isValidActivityContent(content, expectedActivityCount) {
+  const sceneCount = (content.match(/^SCENE \d+/gm) || []).length
+  const rangeCount = [...content.matchAll(/\((\d+)s?[-–](\d+)s?\)/g)].length
+  return sceneCount >= expectedActivityCount && rangeCount >= expectedActivityCount
+}
+
 export async function generateActivity({ character, activities, instructions, model, maxClipDuration = 10 }) {
   const list = activities.map(a => a.trim()).filter(Boolean)
   const maxDur = Number(maxClipDuration) > 0 ? Number(maxClipDuration) : 10
@@ -48,7 +58,7 @@ export async function generateActivity({ character, activities, instructions, mo
   let content = raw.trim().replace(/^OPENING PARAGRAPH:\s*/i, '')
   let normalized = normalizeSceneTimes(content)
 
-  if (content.length < 500 || maxSceneDuration(normalized) > maxDur) {
+  if (!isValidActivityContent(content, list.length) || maxSceneDuration(normalized) > maxDur) {
     const retry = await generateActivityPrompt({
       character,
       activities: list,

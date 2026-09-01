@@ -160,25 +160,14 @@ function parseSections(text) {
     }
     return sections
   }
-  // Activity mode format: opening paragraph + SCENE n — TITLE (x–ys) + CONTINUITY: + NEGATIVE:
-  const sceneParts = text.split(/^(?=SCENE \d+ |CONTINUITY:|NEGATIVE:)/gm)
+  // Activity mode format: opening paragraph + SCENE n — TITLE (x–ys) + CONTINUITY: + AUDIO: + NEGATIVE:
+  const sceneParts = text.split(/^(?=SCENE \d+ |CONTINUITY:|AUDIO:|NEGATIVE:)/gm)
   if (sceneParts.length > 1) {
     const meta = sceneParts[0].trim()
     if (meta) sections.push({ title: 'DESKRIPSI VIDEO', body: meta })
     for (let i = 1; i < sceneParts.length; i++) {
       const lines = sceneParts[i].split('\n')
       const title = lines[0].trim().replace(/:$/, '')
-      const body = lines.slice(1).join('\n').trim()
-      if (title && body) sections.push({ title, body })
-    }
-    return sections
-  }
-  // Master video spec (Mode Aktivitas): # MASTER VIDEO SPEC / # CHARACTER BIBLE / # SCENE n / # GLOBAL NEGATIVE CONSTRAINTS
-  const masterParts = text.split(/^# /gm)
-  if (masterParts.length > 1) {
-    for (let i = 1; i < masterParts.length; i++) {
-      const lines = masterParts[i].split('\n')
-      const title = lines[0].trim()
       const body = lines.slice(1).join('\n').trim()
       if (title && body) sections.push({ title, body })
     }
