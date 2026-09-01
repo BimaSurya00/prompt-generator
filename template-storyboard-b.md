@@ -86,7 +86,7 @@ NEGATIVE PROMPT
 
 ## ATURAN PENULISAN
 
-1. **Tulis SELURUH narasi & deskripsi shot dalam Bahasa Inggris** — format internasional untuk AI video generation, TERLEPAS dari bahasa kerja tool ini. Ini berlaku mutlak untuk Variant B (lihat aturan #5 untuk pengecualian dialog).
+1. **Tulis SELURUH narasi & deskripsi shot dalam bahasa yang dipilih user** (Indonesia atau Inggris) — sama seperti Variant A (lihat aturan #5 untuk pengecualian dialog).
 2. **Prose, bukan bullet** — setiap shot adalah paragraf deskriptif, bukan list
 3. **Timestamp wajib** — setiap shot punya timestamp yang berurutan dan total sesuai durasi
 4. **Hard cut eksplisit** — setiap transisi ditulis "HARD CUT."

@@ -127,6 +127,7 @@ export async function generatePrompts(idea, language = 'id', angleCategory = nul
   const systemB = shared + '\n\n' + fill(PROMPT_IDEATION_B, {
     templateB: STORYBOARD_TEMPLATE_B,
     maxClipDuration,
+    langName,
   })
 
   const userMessage = { role: 'user', content: `Create a storyboard prompt for this content idea: "${idea}"` }
