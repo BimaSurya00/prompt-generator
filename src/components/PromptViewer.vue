@@ -205,8 +205,26 @@ function totalDuration(content) {
 }
 
 async function copyFull(text) {
-  await navigator.clipboard.writeText(text)
-  showCopied.value = true
-  setTimeout(() => { showCopied.value = false }, 1500)
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+    } else {
+      // navigator.clipboard is only available in secure contexts (HTTPS or
+      // localhost) — fall back to the legacy approach for plain-HTTP deploys.
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+    showCopied.value = true
+    setTimeout(() => { showCopied.value = false }, 1500)
+  } catch (e) {
+    console.error('Copy failed:', e)
+  }
 }
 </script>
