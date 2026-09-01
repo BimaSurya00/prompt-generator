@@ -27,9 +27,21 @@ const fill = (template, vars) => Object.entries(vars)
   .reduce((t, [k, v]) => t.replaceAll(`{{${k}}}`, v ?? ''), template)
 
 const PROMPT_ACTIVITY = readPrompt('activity-prompt.md')
-const PROMPT_IDEATION = readPrompt('ideation-a-b.md')
+const PROMPT_IDEATION_SHARED = readPrompt('ideation-shared.md')
+const PROMPT_IDEATION_A = readPrompt('ideation-variant-a.md')
+const PROMPT_IDEATION_B = readPrompt('ideation-variant-b.md')
 const PROMPT_SPLIT_SCENE = readPrompt('split-scene.md')
 const PROMPT_GENERATE_IDEAS = readPrompt('generate-ideas.md')
+
+function mergeUsage(...usages) {
+  const valid = usages.filter(Boolean)
+  if (!valid.length) return null
+  return valid.reduce((sum, u) => ({
+    prompt_tokens: (sum.prompt_tokens || 0) + (u.prompt_tokens || 0),
+    completion_tokens: (sum.completion_tokens || 0) + (u.completion_tokens || 0),
+    total_tokens: (sum.total_tokens || 0) + (u.total_tokens || 0),
+  }), {})
+}
 
 const headers = {
   'Content-Type': 'application/json',
@@ -40,6 +52,7 @@ const headers = {
 
 async function callDeepSeek(messages, temperature = 0.8, maxTokens = 4096, attempts = 3) {
   let lastError
+  let currentMaxTokens = maxTokens
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
       const res = await fetch(config.llm.baseUrl, {
@@ -49,7 +62,7 @@ async function callDeepSeek(messages, temperature = 0.8, maxTokens = 4096, attem
           model: config.llm.model,
           messages,
           temperature,
-          max_tokens: maxTokens,
+          max_tokens: currentMaxTokens,
           reasoning: { enabled: false },
         }),
         signal: AbortSignal.timeout(300000),
@@ -65,6 +78,13 @@ async function callDeepSeek(messages, temperature = 0.8, maxTokens = 4096, attem
         throw new Error(msg)
       }
       const data = await res.json()
+      // Model hit the output token cap mid-generation — content is incomplete.
+      // Retry with a larger budget instead of silently returning a truncated response.
+      if (data.choices[0].finish_reason === 'length' && attempt < attempts) {
+        currentMaxTokens = Math.min(currentMaxTokens * 2, 16384)
+        lastError = new Error('LLM output truncated (finish_reason: length)')
+        continue
+      }
       return {
         content: data.choices[0].message.content,
         usage: data.usage || null,
@@ -91,22 +111,38 @@ export async function generateIdeas(topic) {
 
 export async function generatePrompts(idea, language = 'id', angleCategory = null, maxClipDuration = 15, model = 'generic') {
   const langName = language === 'en' ? 'English' : 'Indonesian'
-  const templatesList = JSON.stringify(STORYBOARD_TEMPLATES, null, 2)
   const modelGuide = MODEL_GUIDES[model] || MODEL_GUIDES.generic
-  const systemPrompt = fill(PROMPT_IDEATION, {
-    templateA: STORYBOARD_TEMPLATE_A,
-    templateB: STORYBOARD_TEMPLATE_B,
-    templatesList,
+  const shared = fill(PROMPT_IDEATION_SHARED, {
     langName,
-    angleCategory: angleCategory || 'unknown (infer from concept)',
-    maxClipDuration,
     modelGuide: modelGuide ? `TARGET MODEL GUIDE:\n${modelGuide}` : '',
   })
 
-  return callDeepSeek([
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: `Create A/B storyboard prompts for this content idea: "${idea}"` },
-  ], 0.85, 8192)
+  const systemA = shared + '\n\n' + fill(PROMPT_IDEATION_A, {
+    templateA: STORYBOARD_TEMPLATE_A,
+    templatesList: JSON.stringify(STORYBOARD_TEMPLATES, null, 2),
+    angleCategory: angleCategory || 'unknown (infer from concept)',
+    maxClipDuration,
+  })
+  const systemB = shared + '\n\n' + fill(PROMPT_IDEATION_B, {
+    templateB: STORYBOARD_TEMPLATE_B,
+    maxClipDuration,
+  })
+
+  const userMessage = { role: 'user', content: `Create a storyboard prompt for this content idea: "${idea}"` }
+
+  // Generate each variant as its own completion (own max_tokens budget) instead
+  // of one combined A+B response — a single 8192-token cap for both was getting
+  // truncated for ideas that need many short scenes, silently corrupting one variant.
+  const [a, b] = await Promise.all([
+    callDeepSeek([{ role: 'system', content: systemA }, userMessage], 0.85, 8192),
+    callDeepSeek([{ role: 'system', content: systemB }, userMessage], 0.85, 8192),
+  ])
+
+  return {
+    content: `===A===\n${a.content.trim()}\n\n===B===\n${b.content.trim()}`,
+    usage: mergeUsage(a.usage, b.usage),
+    model: a.model || b.model || null,
+  }
 }
 
 export async function splitScene(sceneText, maxDuration, language = 'id') {
