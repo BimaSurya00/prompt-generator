@@ -1,4 +1,4 @@
-import { generatePrompts as llmGeneratePrompts, splitScene } from './llm.service.js'
+import { generatePrompts as llmGeneratePrompts, splitScene, translateContent } from './llm.service.js'
 import { ideaRepo } from '../repositories/ideaRepo.js'
 import { promptRepo } from '../repositories/promptRepo.js'
 import { usageRepo } from '../repositories/usageRepo.js'
@@ -108,4 +108,31 @@ export async function generateStoryboards(ideaIds, { language, maxClipDuration, 
     results: rawResults.map(({ usage: _u, model: _m, ...rest }) => rest),
     usage: totalUsage,
   }
+}
+
+export async function translateResults(results, targetLang) {
+  const usages = []
+  let modelUsed = null
+
+  const translated = await Promise.all(results.map(async (r) => {
+    const prompts = await Promise.all(r.prompts.map(async (p) => {
+      const { content, usage, model } = await translateContent(p.content, targetLang)
+      if (usage) usages.push(usage)
+      if (!modelUsed && model) modelUsed = model
+      return { ...p, content }
+    }))
+    return { ...r, prompts }
+  }))
+
+  const usage = usages.length
+    ? usages.reduce((sum, u) => ({
+      prompt_tokens: (sum.prompt_tokens || 0) + (u.prompt_tokens || 0),
+      completion_tokens: (sum.completion_tokens || 0) + (u.completion_tokens || 0),
+      total_tokens: (sum.total_tokens || 0) + (u.total_tokens || 0),
+    }), {})
+    : null
+
+  if (usage) usageRepo.log('translate-storyboard', modelUsed || 'unknown', usage)
+
+  return { results: translated, usage }
 }

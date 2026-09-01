@@ -22,6 +22,10 @@ export function generatePrompts(ideas, signal, language = 'id', maxClipDuration 
   return request('/generate-prompts', { ideas, language, maxClipDuration, model }, signal)
 }
 
+export function translateStoryboards(results, targetLang, signal) {
+  return request('/translate-storyboards', { results, targetLang }, signal)
+}
+
 export function generateActivity(data, signal) {
   return request('/generate-activity', data, signal)
 }

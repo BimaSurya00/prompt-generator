@@ -2,7 +2,24 @@
   <div>
     <div class="flex items-center justify-between mb-3 pb-2 border-b border-edge">
       <span class="font-display font-bold text-sm text-faint uppercase">Storyboard Output</span>
-      <span class="font-mono text-xs text-faint">{{ results.length }} naskah</span>
+      <div class="flex items-center gap-3">
+        <div v-if="showLanguageToggle" class="flex items-center rounded border border-edge overflow-hidden">
+          <button
+            :disabled="translating"
+            class="px-2.5 py-1 text-xs font-mono transition-colors disabled:opacity-50 disabled:cursor-wait"
+            :class="currentLang === 'id' ? 'bg-accent text-accent-contrast' : 'text-soft hover:text-text'"
+            @click="$emit('translate', 'id')"
+          >ID</button>
+          <button
+            :disabled="translating"
+            class="px-2.5 py-1 text-xs font-mono transition-colors disabled:opacity-50 disabled:cursor-wait"
+            :class="currentLang === 'en' ? 'bg-accent text-accent-contrast' : 'text-soft hover:text-text'"
+            @click="$emit('translate', 'en')"
+          >EN</button>
+        </div>
+        <span v-if="translating" class="spinner-sm"></span>
+        <span class="font-mono text-xs text-faint">{{ results.length }} naskah</span>
+      </div>
     </div>
 
     <div class="space-y-4">
@@ -93,7 +110,11 @@ import { ref } from 'vue'
 defineProps({
   results: { type: Array, required: true },
   single: { type: Boolean, default: false },
+  showLanguageToggle: { type: Boolean, default: false },
+  currentLang: { type: String, default: 'id' },
+  translating: { type: Boolean, default: false },
 })
+defineEmits(['translate'])
 
 const showCopied = ref(false)
 const sectionsOpen = ref({})

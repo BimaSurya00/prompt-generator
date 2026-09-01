@@ -1,5 +1,5 @@
 import { reactive } from 'vue'
-import { generateIdeas, generatePrompts } from '../api/index.js'
+import { generateIdeas, generatePrompts, translateStoryboards } from '../api/index.js'
 
 // Store module-level: state hidup di luar komponen, jadi pindah route
 // tidak menghancurkan hasil generate yang sedang berjalan / sudah selesai.
@@ -7,8 +7,10 @@ const state = reactive({
   ideas: [],
   topicId: null,
   results: [],
+  resultsLang: 'id',
   loading: false,
   generatingPrompts: false,
+  translating: false,
   error: '',
   lastUsage: null,
 })
@@ -21,6 +23,7 @@ export function useGenerateStore() {
     state.ideas = []
     state.topicId = null
     state.results = []
+    state.resultsLang = 'id'
     state.error = ''
     state.lastUsage = null
   }
@@ -52,6 +55,7 @@ export function useGenerateStore() {
     try {
       const data = await generatePrompts(selectedIds, abortCtrl.signal, language, maxClipDuration, model)
       state.results = data.results
+      state.resultsLang = language
       state.lastUsage = data.usage
       refreshUsage()
     } catch (e) {
@@ -61,5 +65,28 @@ export function useGenerateStore() {
     }
   }
 
-  return { state, resetAll, generateIdeasAction, generatePromptsAction }
+  async function translateResultsAction(targetLang, refreshUsage) {
+    if (!state.results.length || state.resultsLang === targetLang || state.translating) return
+    state.translating = true
+    state.error = ''
+    try {
+      const data = await translateStoryboards(state.results, targetLang)
+      state.results = data.results
+      state.resultsLang = targetLang
+      if (data.usage) {
+        state.lastUsage = {
+          prompt_tokens: (state.lastUsage?.prompt_tokens || 0) + (data.usage.prompt_tokens || 0),
+          completion_tokens: (state.lastUsage?.completion_tokens || 0) + (data.usage.completion_tokens || 0),
+          total_tokens: (state.lastUsage?.total_tokens || 0) + (data.usage.total_tokens || 0),
+        }
+      }
+      refreshUsage()
+    } catch (e) {
+      state.error = e.message
+    } finally {
+      state.translating = false
+    }
+  }
+
+  return { state, resetAll, generateIdeasAction, generatePromptsAction, translateResultsAction }
 }

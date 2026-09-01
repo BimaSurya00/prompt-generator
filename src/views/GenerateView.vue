@@ -76,6 +76,10 @@
       <PromptViewer
         v-if="state.results.length"
         :results="state.results"
+        show-language-toggle
+        :current-lang="state.resultsLang"
+        :translating="state.translating"
+        @translate="onTranslate"
       />
       <p v-if="state.results.length && state.lastUsage?.total_tokens" class="font-mono text-xs text-faint text-center">
         Generasi ini memakai {{ state.lastUsage.total_tokens.toLocaleString() }} token
@@ -96,7 +100,7 @@ import PromptViewer from '../components/PromptViewer.vue'
 import ActivityPrompt from '../components/ActivityPrompt.vue'
 
 const refreshUsage = inject('refreshUsage', () => {})
-const { state, resetAll, generateIdeasAction, generatePromptsAction } = useGenerateStore()
+const { state, resetAll, generateIdeasAction, generatePromptsAction, translateResultsAction } = useGenerateStore()
 
 const mode = ref('ideation')
 const maxClipDuration = ref(15)
@@ -108,5 +112,9 @@ async function onTopicSubmit(topic) {
 
 async function onGeneratePrompts(selectedIds, lang) {
   await generatePromptsAction(selectedIds, refreshUsage, lang, maxClipDuration.value, model.value)
+}
+
+async function onTranslate(targetLang) {
+  await translateResultsAction(targetLang, refreshUsage)
 }
 </script>

@@ -33,6 +33,7 @@ const PROMPT_IDEATION_A = readPrompt('ideation-variant-a.md')
 const PROMPT_IDEATION_B = readPrompt('ideation-variant-b.md')
 const PROMPT_SPLIT_SCENE = readPrompt('split-scene.md')
 const PROMPT_GENERATE_IDEAS = readPrompt('generate-ideas.md')
+const PROMPT_TRANSLATE = readPrompt('translate.md')
 
 function mergeUsage(...usages) {
   const valid = usages.filter(Boolean)
@@ -159,6 +160,14 @@ export async function splitScene(sceneText, maxDuration, language = 'id') {
       content: `SCENE TO SPLIT (max ${maxDuration} detik per sub-scene):\n\n${sceneText}`,
     },
   ], 0.5, 4096)
+}
+
+export async function translateContent(content, targetLang = 'id') {
+  const targetLangName = targetLang === 'en' ? 'English' : 'Indonesian'
+  return callDeepSeek([
+    { role: 'system', content: fill(PROMPT_TRANSLATE, { targetLangName }) },
+    { role: 'user', content },
+  ], 0.3, 8192)
 }
 
 export async function generateActivityPrompt({ character, activities, instructions = '', model = 'generic' }) {
