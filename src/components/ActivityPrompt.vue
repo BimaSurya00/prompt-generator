@@ -40,6 +40,15 @@
         </div>
 
         <div class="flex items-center gap-3">
+          <label for="act-maxclip" class="text-xs text-soft">Max durasi/clip (detik)</label>
+          <input
+            id="act-maxclip"
+            type="number"
+            v-model.number="maxClipDuration"
+            min="5"
+            max="30"
+            class="w-20 px-2.5 py-1.5 rounded bg-surface border border-edge text-sm text-text focus:outline-none focus:border-accent"
+          />
           <label class="text-xs text-soft" for="act-model">Target model</label>
           <select
             id="act-model"
@@ -81,6 +90,10 @@
       v-if="result"
       :results="[{ ideaId: 'activity', idea: 'Prompt Aktivitas', prompts: [{ variant: 'A', content: result }] }]"
       single
+      show-language-toggle
+      :current-lang="resultLang"
+      :translating="translating"
+      @translate="onTranslate"
     />
 
     <div v-if="history.length" class="border border-edge rounded overflow-hidden">
@@ -111,17 +124,20 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { generateActivity, getActivityHistory, deleteActivityHistory } from '../api/index.js'
+import { generateActivity, translateActivity, getActivityHistory, deleteActivityHistory } from '../api/index.js'
 import PromptViewer from './PromptViewer.vue'
 
 const character = ref('')
 const activitiesText = ref('')
 const instructions = ref('')
 const model = ref('seedance')
+const maxClipDuration = ref(10)
 
 const loading = ref(false)
 const error = ref('')
 const result = ref('')
+const resultLang = ref('en')
+const translating = ref(false)
 const history = ref([])
 
 function formatDate(iso) {
@@ -143,6 +159,7 @@ function loadFromHistory(item) {
   character.value = item.character
   activitiesText.value = item.activities
   result.value = item.content
+  resultLang.value = 'en'
   model.value = item.model === 'generic' ? 'generic' : item.model
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
@@ -165,13 +182,30 @@ async function generate() {
       activities,
       instructions: instructions.value.trim(),
       model: model.value,
+      maxClipDuration: maxClipDuration.value,
     })
     result.value = data.content
+    resultLang.value = 'en'
     await loadHistory()
   } catch (e) {
     error.value = e.message
   } finally {
     loading.value = false
+  }
+}
+
+async function onTranslate(targetLang) {
+  if (!result.value || resultLang.value === targetLang || translating.value) return
+  translating.value = true
+  error.value = ''
+  try {
+    const data = await translateActivity(result.value, targetLang)
+    result.value = data.results[0].prompts[0].content
+    resultLang.value = targetLang
+  } catch (e) {
+    error.value = e.message
+  } finally {
+    translating.value = false
   }
 }
 </script>

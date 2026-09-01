@@ -170,10 +170,11 @@ export async function translateContent(content, targetLang = 'id') {
   ], 0.3, 8192)
 }
 
-export async function generateActivityPrompt({ character, activities, instructions = '', model = 'generic' }) {
+export async function generateActivityPrompt({ character, activities, instructions = '', model = 'generic', maxClipDuration = 10 }) {
   const sceneCount = activities.length
   const modelGuide = MODEL_GUIDES[model] || MODEL_GUIDES.generic
   const systemPrompt = fill(PROMPT_ACTIVITY, {
+    maxClipDuration,
     modelGuide: modelGuide ? `TARGET MODEL GUIDE:\n${modelGuide}` : '',
   })
 

@@ -23,38 +23,52 @@ export function normalizeSceneTimes(content, targetTotal = 30) {
 }
 
 const FALLBACK_CONTINUITY = '\n\nCONTINUITY:\nOne continuous session in the same setting. Do not change identity, face, hair, outfit, props, or lighting direction.'
+const FALLBACK_AUDIO = '\n\nAUDIO:\nDiegetic ambient sound only, matching each activity (footsteps, object handling, fabric, ambient room tone). No music, no voice, no narration.'
 const FALLBACK_NEGATIVE = '\n\nNEGATIVE:\nNo distorted hands, extra fingers, duplicated limbs, broken reflections, floating objects, incorrect physics, exaggerated muscles, excessive sweat, sudden lighting changes, extreme camera shake, unrealistic movement, text, logos, subtitles, or watermarks.'
 
-export async function generateActivity({ character, activities, instructions, model }) {
+export function maxSceneDuration(content) {
+  const ranges = [...content.matchAll(/\((\d+)s?[-–](\d+)s?\)/g)]
+  if (!ranges.length) return 0
+  return Math.max(...ranges.map(m => Number(m[2]) - Number(m[1])))
+}
+
+export async function generateActivity({ character, activities, instructions, model, maxClipDuration = 10 }) {
   const list = activities.map(a => a.trim()).filter(Boolean)
+  const maxDur = Number(maxClipDuration) > 0 ? Number(maxClipDuration) : 10
 
   let { content: raw, usage, model: usedModel } = await generateActivityPrompt({
     character,
     activities: list,
     instructions,
     model,
+    maxClipDuration: maxDur,
   })
   usageRepo.log('generate-activity', usedModel, usage)
 
   let content = raw.trim().replace(/^OPENING PARAGRAPH:\s*/i, '')
+  let normalized = normalizeSceneTimes(content)
 
-  if (content.length < 500) {
+  if (content.length < 500 || maxSceneDuration(normalized) > maxDur) {
     const retry = await generateActivityPrompt({
       character,
       activities: list,
       instructions,
       model,
+      maxClipDuration: maxDur,
     })
     usageRepo.log('generate-activity', retry.model, retry.usage)
     content = retry.content.trim().replace(/^OPENING PARAGRAPH:\s*/i, '')
+    normalized = normalizeSceneTimes(content)
     usage = retry.usage
     usedModel = retry.model
   }
 
-  content = normalizeSceneTimes(content)
+  content = normalized
 
   if (!/CONTINUITY:/i.test(content)) {
-    content += FALLBACK_CONTINUITY + FALLBACK_NEGATIVE
+    content += FALLBACK_CONTINUITY + FALLBACK_AUDIO + FALLBACK_NEGATIVE
+  } else if (!/AUDIO:/i.test(content)) {
+    content += FALLBACK_AUDIO + FALLBACK_NEGATIVE
   } else if (!/NEGATIVE:/i.test(content)) {
     content += FALLBACK_NEGATIVE
   }

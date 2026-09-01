@@ -6,5 +6,6 @@ export const generateActivitySchema = z.object({
     activities: z.array(z.string({ error: 'At least one activity is required' }).trim().min(1)).min(1, 'At least one activity is required'),
     instructions: z.string().optional(),
     model: z.string().optional(),
+    maxClipDuration: z.coerce.number().int().positive().max(30).optional(),
   }),
 })

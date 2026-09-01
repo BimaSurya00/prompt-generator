@@ -4,6 +4,7 @@ DO NOT TRANSLATE OR CHANGE — keep byte-for-byte identical:
 - Structural markers: ===A===, ===B===, === ADEGAN [number] — [title] ===, SHOT [number] — [timestamp] — [title], HARD CUT., TEMPLATE_USED:
 - Field labels: DURASI, SUBJEK, APA YANG TERJADI, DIALOG / VOICE OVER, SETTING, VISUAL PROMPT, CONTINUITY DARI ADEGAN SEBELUMNYA, AVOID, PERAN ADEGAN
 - Section headers: AUDIO, VISUAL STYLE, NEGATIVE PROMPT, CAMERA AND VIEWPOINT FOR THE ENTIRE FILM, CONTINUITY LOCK FOR EVERY SHOT
+- Activity-mode markers: SCENE [number] — [title] ([start]–[end]s), CONTINUITY:, AUDIO:, NEGATIVE:
 - All numbers and timestamps, and the exact word "detik" wherever it appears after DURASI: — the app parses this literal word to display duration badges; never change it to "seconds" or any other unit
 - Any dialogue line that is intentionally written in a different spoken language than the surrounding narration (e.g. a character's native language) — leave those lines exactly as written
 

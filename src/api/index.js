@@ -30,6 +30,13 @@ export function generateActivity(data, signal) {
   return request('/generate-activity', data, signal)
 }
 
+export function translateActivity(content, targetLang, signal) {
+  return request('/translate-storyboards', {
+    results: [{ ideaId: 'activity', idea: 'Prompt Aktivitas', prompts: [{ variant: 'A', content }] }],
+    targetLang,
+  }, signal)
+}
+
 export function getActivityHistory() {
   return fetch(`${BASE}/activity-history`).then(r => r.json())
 }
