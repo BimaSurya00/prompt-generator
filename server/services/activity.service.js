@@ -45,6 +45,9 @@ export function isValidActivityContent(content, expectedActivityCount) {
 export async function generateActivity({ character, activities, instructions, model, maxClipDuration = 10 }) {
   const list = activities.map(a => a.trim()).filter(Boolean)
   const maxDur = Number(maxClipDuration) > 0 ? Number(maxClipDuration) : 10
+  // A single activity gets its own clip-length video instead of being padded/split
+  // to fill a fixed 30s runway meant for a multi-activity sequence.
+  const totalDur = list.length === 1 ? maxDur : 30
 
   let { content: raw, usage, model: usedModel } = await generateActivityPrompt({
     character,
@@ -56,7 +59,7 @@ export async function generateActivity({ character, activities, instructions, mo
   usageRepo.log('generate-activity', usedModel, usage)
 
   let content = raw.trim().replace(/^OPENING PARAGRAPH:\s*/i, '')
-  let normalized = normalizeSceneTimes(content)
+  let normalized = normalizeSceneTimes(content, totalDur)
 
   if (!isValidActivityContent(content, list.length) || maxSceneDuration(normalized) > maxDur) {
     const retry = await generateActivityPrompt({
@@ -68,7 +71,7 @@ export async function generateActivity({ character, activities, instructions, mo
     })
     usageRepo.log('generate-activity', retry.model, retry.usage)
     content = retry.content.trim().replace(/^OPENING PARAGRAPH:\s*/i, '')
-    normalized = normalizeSceneTimes(content)
+    normalized = normalizeSceneTimes(content, totalDur)
     usage = retry.usage
     usedModel = retry.model
   }

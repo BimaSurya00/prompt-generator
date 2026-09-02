@@ -172,9 +172,17 @@ export async function translateContent(content, targetLang = 'id') {
 
 export async function generateActivityPrompt({ character, activities, instructions = '', model = 'generic', maxClipDuration = 10 }) {
   const sceneCount = activities.length
+  // A single activity gets its own clip-length video instead of being padded/split
+  // to fill a fixed 30s runway meant for a multi-activity sequence.
+  const totalDuration = sceneCount === 1 ? maxClipDuration : 30
+  const splitRule = sceneCount === 1
+    ? `There is only ONE activity in this request — output EXACTLY ONE SCENE block spanning the full {{totalDuration}}s. Do NOT split it into multiple SCENE blocks under any circumstance; a single activity must be one continuous, uninterrupted clip.`
+    : `If a single activity naturally needs more than {{maxClipDuration}}s, SPLIT it into 2+ consecutive SCENE blocks (each independently generatable, with a short continuity note) rather than exceeding the per-scene limit.`
   const modelGuide = MODEL_GUIDES[model] || MODEL_GUIDES.generic
   const systemPrompt = fill(PROMPT_ACTIVITY, {
     maxClipDuration,
+    totalDuration,
+    splitRule: fill(splitRule, { totalDuration, maxClipDuration }),
     modelGuide: modelGuide ? `TARGET MODEL GUIDE:\n${modelGuide}` : '',
   })
 
@@ -182,7 +190,7 @@ export async function generateActivityPrompt({ character, activities, instructio
     { role: 'system', content: systemPrompt },
     {
       role: 'user',
-      content: `CHARACTER:\n${character}\n\nACTIVITIES (one per line, order = scene order):\n${activities.join('\n')}${instructions ? `\n\nADDITIONAL INSTRUCTIONS:\n${instructions}` : ''}\n\n(Total activities: ${sceneCount}, total duration must be exactly 30 seconds)`,
+      content: `CHARACTER:\n${character}\n\nACTIVITIES (one per line, order = scene order):\n${activities.join('\n')}${instructions ? `\n\nADDITIONAL INSTRUCTIONS:\n${instructions}` : ''}\n\n(Total activities: ${sceneCount}, total duration must be exactly ${totalDuration} seconds)`,
     },
   ], 0.85, 8192)
 }
